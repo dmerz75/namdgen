@@ -16,7 +16,7 @@ envdist={'01.vac':zcrd,'02.imp':zcrd,'03.exp':zcrd} # i.e. '01.vac':zc7...
 langevD='5'                             # langevin Damping: 0.2, 1, 5
 
 #___GATE_______configurations_______
-gate ='steele'                          # 'ggate' or 'steele' or 'ggatecpu'
+gate ='ggate'                           # 'ggate' or 'steele' or 'ggatecpu'
 cn   ='6'                               # ppn request
 comp ='cpu'                             # gpu or cpu        !TESLA: always 1
 wallt='mwt'                             # swt=72 hrs, mwt=368 hrs, lwt=720 hrs
