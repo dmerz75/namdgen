@@ -9,16 +9,16 @@ mlist=['da','ee','el','le','oo']        # potentials--> to be generated
 molec=[mlist[0]]                        # can use [0],[1] ... [n]
 ts   ='2.0'                             # 0.5, 1.0, 2.0
 vels =['3','4','5']                     # ['1','2'] | ['4','5']
-x    ={'1':2,'2':2,'3':20,'4':36,'5':48}# duplicates--> 03.00, 03.01 ... any #!
+x    ={'1':2,'2':2,'3':8,'4':16,'5':8}  # duplicates--> 03.00, 03.01 ... any #!
 environ=['01.vac','02.imp','03.exp']    # ['01.vac'] | ['01.vac','03.exp']
 zcrd ='zc16'                            # z constraint  (smd.tcl)
 envdist={'01.vac':zcrd,'02.imp':zcrd,'03.exp':zcrd} # i.e. '01.vac':zc7...
 langevD='5'                             # langevin Damping: 0.2, 1, 5
 
 #___GATE_______configurations_______
-gate ='steele'                          # 'ggate' or 'steele' or 'ggatecpu'
-cn   ='6'                               # ppn request
-comp ='cpu'                             # gpu or cpu        !TESLA: always 1
+gate ='ggate'                           # 'ggate' or 'steele' or 'ggatecpu'
+cn   ='3'                               # ppn request
+comp ='gpu'                             # gpu or cpu        !TESLA: always 1
 wallt='mwt'                             # swt=72 hrs, mwt=368 hrs, lwt=720 hrs
 queue='workq'                           # tg_ 'short'72 'workq'720 'standby-8'
 
