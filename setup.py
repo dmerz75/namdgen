@@ -9,7 +9,7 @@ mlist=['da','ee','el','le','oo']        # potentials--> to be generated
 molec=[mlist[0]]                        # can use [0],[1] ... [n]
 ts   ='2.0'                             # 0.5, 1.0, 2.0
 vels =['3','4','5']                     # ['1','2'] | ['4','5']
-x    ={'1':2,'2':2,'3':20,'4':64,'5':78}# duplicates--> 03.00, 03.01 ... any #!
+x    ={'1':2,'2':2,'3':20,'4':36,'5':48}# duplicates--> 03.00, 03.01 ... any #!
 environ=['01.vac','02.imp','03.exp']    # ['01.vac'] | ['01.vac','03.exp']
 zcrd ='zc16'                            # z constraint  (smd.tcl)
 envdist={'01.vac':zcrd,'02.imp':zcrd,'03.exp':zcrd} # i.e. '01.vac':zc7...
@@ -56,7 +56,7 @@ tstep  ={'0.5':0.5,'1.0':1.0,'2.0':2.0}
 dictpf ={'1':1,'2':1,'3':50,'4':100,'5':500}
 setup  ={'1':{'vel':0.002,'steps':10000,'dcd':100,'howmany':99,'tclfreq':50},
       '2':{'vel':0.0002,'steps':100000,'dcd':1000,'howmany':48,'tclfreq':50},
-      '3':{'vel':0.00002,'steps':1000000,'dcd':10000,'howmany':24,
+      '3':{'vel':0.00002,'steps':1000000,'dcd':10000,'howmany':30,
                                                                'tclfreq':50},
       '4':{'vel':0.000002,'steps':10000000,'dcd':100000,'howmany':3,
                                                                'tclfreq':50},
@@ -89,6 +89,7 @@ if len(sys.argv)>=2:                                 # load pickle if available
     envdir=confd['envdir']
     strdir=confd['strdir']
     tstep=confd['tstep']
+    dictpf=confd['dictpf']
     setup=confd['setup']
     langevD=confd['langevD']
 #______________________________________________________________________________
@@ -298,6 +299,7 @@ confd['confige']=confige
 confd['envdir']=envdir
 confd['strdir']=strdir
 confd['tstep']=tstep
+confd['dictpf']=dictpf
 confd['setup']=setup
 confd['langevD']=langevD
 os.chdir(jobdir)
