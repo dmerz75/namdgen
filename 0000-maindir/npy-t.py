@@ -2,6 +2,7 @@
 import os, os.path
 from glob import glob
 import numpy as np
+from random import randint
 
 my_dir=os.path.abspath(os.path.dirname(__file__))
 acc=[]
@@ -16,10 +17,10 @@ if not os.path.exists(ddir):
 def pack(i):
     acc=[]
     for path in glob(os.path.join(my_dir,'%s.*/*-tef.dat*' % num)):
-        if len(acc)==40:
+        if len(acc)==25:
 	    break
         print path
-        idn=(path.split('/')[-1]).split('.')[-1]
+        idn=randint(10000,99999)
         sample_i = np.loadtxt(path)
         os.remove(path)
         acc.append(sample_i)
