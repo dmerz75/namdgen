@@ -3,8 +3,12 @@ import os, os.path
 from glob import glob
 import numpy as np
 from random import randint
+import datetime
 
 my_dir=os.path.abspath(os.path.dirname(__file__))
+now=datetime.datetime.now()
+print now
+now=now.strftime("%Y%m%dt%H%M")
 acc=[]
 
 #os.chdir(os.path.join(my_dir,opdir))
@@ -17,20 +21,19 @@ if not os.path.exists(ddir):
 def pack(i):
     acc=[]
     for path in glob(os.path.join(my_dir,'%s.*/*-tef.dat*' % num)):
-        if len(acc)==25:
+        if len(acc)==4:
 	    break
         print path
-        idn=randint(10000,99999)
         sample_i = np.loadtxt(path)
         os.remove(path)
         acc.append(sample_i)
     os.chdir(ddir)
     data = np.array(acc)
-    np.save('%s_%d_%s' % (num,i,idn),data)
+    np.save('%s_%d_%s' % (num,i,now),data)
 
 count=0
 for path in glob(os.path.join(my_dir,'%s.*/*-tef.dat*' % num)):
     count+=1
 print count
-for i in range(1,(count/20)+2):
+for i in range(0,(count/4)+1):
     pack(i)
