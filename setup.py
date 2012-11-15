@@ -2,23 +2,23 @@
 import sys, os, itertools, tempfile, shutil, glob, subprocess, re, pickle
 
 #___PROJECT__PREFIX__NAME:   *crdir*.dac130
-crdir='105.'
+crdir='000.'
 
 #___MOLECULE___configurations_______
 mlist=['da','ee','el','le','oo']        # potentials--> to be generated
-molec=[mlist[0]]                        # can use [0],[1] ... [n]
+molec=[mlist[2]]                        # can use [0],[1] ... [n]
 ts   ='2.0'                             # 0.5, 1.0, 2.0
-vels =['3','4','5']                     # ['1','2'] | ['4','5']
-x    ={'1':2,'2':2,'3':8,'4':16,'5':8}  # duplicates--> 03.00, 03.01 ... any #!
+vels =['2','3']                         # ['1','2'] | ['4','5']
+x    ={'1':4,'2':4,'3':4,'4':4,'5':8}   # duplicates--> 03.00, 03.01 ... any #!
 environ=['01.vac','02.imp','03.exp']    # ['01.vac'] | ['01.vac','03.exp']
 zcrd ='zc16'                            # z constraint  (smd.tcl)
 envdist={'01.vac':zcrd,'02.imp':zcrd,'03.exp':zcrd} # i.e. '01.vac':zc7...
 langevD='5'                             # langevin Damping: 0.2, 1, 5
 
 #___GATE_______configurations_______
-gate ='ggate'                           # 'ggate' or 'steele' or 'ggatecpu'
+gate ='ggatecpu'                           # 'ggate' or 'steele' or 'ggatecpu'
 cn   ='3'                               # ppn request
-comp ='gpu'                             # gpu or cpu        !TESLA: always 1
+comp ='cpu'                             # gpu or cpu        !TESLA: always 1
 wallt='mwt'                             # swt=72 hrs, mwt=368 hrs, lwt=720 hrs
 queue='workq'                           # tg_ 'short'72 'workq'720 'standby-8'
 
@@ -26,11 +26,11 @@ queue='workq'                           # tg_ 'short'72 'workq'720 'standby-8'
 zdictn ={'zc1': 10.0,'zc2': 10.2,'zc3': 10.4,'zc4': 10.6,'zc5': 10.8,
          'zc6': 11.0,'zc7': 11.2,'zc8': 11.4,'zc9': 11.6,'zc10':11.8,
          'zc11':12.0,'zc12':12.2,'zc13':12.4,'zc14':12.6,'zc15':12.8,
-         'zc16':13.0,'zc17':13.2,'zc18':13.4,'zc19':13.6,'zc20':13.8}
+         'zc16':13.0,'zc17':13.2,'zc18':13.4,'zc19':13.6,'zc20':17.2}
 zlabel ={'zc1':'c100','zc2':'c102','zc3':'c104','zc4':'c106','zc5':'c108',
          'zc6':'c110','zc7':'c112','zc8':'c114','zc9':'c116','zc10':'c118',
          'zc11':'c120','zc12':'c122','zc13':'c124','zc14':'c126','zc15':'c128',
-         'zc16':'c130','zc17':'c132','zc18':'c134','zc19':'c136','zc20':'c138'}
+         'zc16':'c130','zc17':'c132','zc18':'c134','zc19':'c136','zc20':'c172'}
 configf=['job.sh','go.py','smd.namd','smd.tcl','expavg.py']
 selgate={'ggate':{'job':'job-gg.sh','go':'go-g.py'},
          'ggatecpu':{'job':'job-ggc.sh','go':'go-g.py'},
