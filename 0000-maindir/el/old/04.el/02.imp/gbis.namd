@@ -1,0 +1,74 @@
+#############################################################
+## JOB DESCRIPTION                                         ##
+#############################################################
+# Minimization and Equilibration of 
+# chignolin in generalized Born implicit solvent
+#############################################################
+## ADJUSTABLE PARAMETERS                                   ##
+#############################################################
+
+structure          nm.psf
+coordinates        nm.pdb 
+set temperature    300
+set outputname     eegbis100ps 
+firsttimestep      0
+
+#############################################################
+## SIMULATION PARAMETERS                                   ##
+#############################################################
+
+# Input
+paraTypeCharmm	    on
+parameters          ../../reso/toppar/par_all27_prot_lipid.prm 
+temperature         $temperature
+
+# GBIS Implicit Solvent
+GBIS                on
+solventDielectric   78.5
+ionConcentration    0.0
+alphaCutoff         12.0
+
+# Force-Field Parameters
+exclude             scaled1-4
+1-4scaling          1.0
+cutoff              14.0
+switching           on
+switchdist          13.0
+pairlistdist        16.0
+
+
+# Integrator Parameters
+timestep            2.0  ;# 2fs/step
+rigidBonds          all  ;# needed for 2fs steps
+nonbondedFreq       1
+fullElectFrequency  2
+stepspercycle       10
+
+
+# Constant Temperature Control
+langevin            on    ;# do langevin dynamics
+langevinDamping     1     ;# damping coefficient (gamma) of 1/ps
+langevinTemp        $temperature
+langevinHydrogen    off    ;# don't couple langevin bath to hydrogens
+
+# Output
+outputName         $outputname
+restartfreq        1000     ;# 500steps = every 1ps
+dcdfreq            5000
+xstFreq            5000
+outputEnergies     1000
+outputPressure     1000
+
+#############################################################
+## EXTRA PARAMETERS                                        ##
+#############################################################
+
+#############################################################
+## EXECUTION SCRIPT                                        ##
+#############################################################
+
+# Minimization
+minimize            1000
+reinitvels          $temperature
+
+run 49000 ;# 100 ps

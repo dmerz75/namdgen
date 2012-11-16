@@ -1,0 +1,19 @@
+package require psfgen
+psfcontext new delete
+topology ../reso/toppar/top_all27_prot_lipid.rtf
+
+# build protein segment
+segment PEP {
+  pdb elnoh.pdb
+  first ACE
+  last CT2
+}
+
+coordpdb elnoh.pdb PEP
+guesscoord
+
+# write psf & pdb
+writepdb el_nw.pdb
+writepsf el_nw.psf
+
+# End of psfgen commands

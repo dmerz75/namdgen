@@ -67,7 +67,7 @@ plt.clf()
 for index in plot_indices:
    e_i = data[index,::,1]
    w_i = work[index,::]
-   plt.plot(smx[::xxpfxx],w_i[::xxpfxx],'k-',linewidth=0.4)
+   plt.plot(domain[::xxpfxx],w_i[::xxpfxx],'k-',linewidth=0.4)
 
 plt.plot(smx[::xxpfxx], deltaf[::xxpfxx],'r-',linewidth=4,label='SMD')
 plt.plot(smx[::xxpfxx], deltaf[::xxpfxx],'k--',linewidth=0.8)
@@ -94,7 +94,7 @@ plt.xlim([xmin-.1,xmax+.1])
 plt.legend(loc=2,borderaxespad=2)
 plt.xlabel('Extension (A)')
 plt.ylabel('Work (kcal/mol)')
-plt.title(str(data.shape[0])+'trj xxenvironxx xxvelansxx A/ns')
+plt.title(str(data.shape[1])+'trj xxenvironxx xxvelansxx A/ns')
 plt.draw()
 #plt.show()
 fig.savefig('xxplotnamexx.png')
