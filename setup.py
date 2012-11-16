@@ -33,7 +33,7 @@ zlabel ={'zc1':'c100','zc2':'c102','zc3':'c104','zc4':'c106','zc5':'c108',
          'zc16':'c130','zc17':'c132','zc18':'c134','zc19':'c136','zc20':'c172'}
 configf=['job.sh','go.py','smd.namd','smd.tcl','expavg.py']
 selgate={'ggate':{'job':'job-gg.sh','go':'go-g.py'},
-         'ggatecpu':{'job':'job-ggc.sh','go':'go-g.py'},
+         'ggatecpu':{'job':'job-ggc.sh','go':'go-ggc.py'},
          'steele':{'job':'job-st.sh','go':'go-st.py'}}
 confign={'1':{'gpu':'nodes=1:ppn=1:gpus=1:TESLA','cpu':'nodes=1:ppn=1'},
          '2':{'gpu':'nodes=1:ppn=2:gpus=1:TESLA','cpu':'nodes=1:ppn=2'},

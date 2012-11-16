@@ -2,6 +2,8 @@ namdgen
 author: Dale R. Merz Jr.
 email : dmerz3@gatech.edu
 
+NAMD Steered Molecular Dynamics
+
 quick description:
  -steered molecular dynamics with NAMD
  -obtaining the PMF stretching a peptide
