@@ -14,4 +14,4 @@ export LD_LIBRARY_PATH=${NAMD_DIR}:${LD_LIBRARY_PATH}
 cd $PBS_O_WORKDIR
 
 # run job
-./main.pl
+./go.py

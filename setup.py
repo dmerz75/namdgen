@@ -6,17 +6,17 @@ crdir='100.'
 
 #___MOLECULE___configurations_______
 mlist=['da','ee','el','le','oo']        # potentials--> to be generated
-molec=[mlist[0]]                        # can use [0],[1] ... [n]
+molec=[mlist[2]]                        # can use [0],[1] ... [n]
 ts   ='2.0'                             # 0.5, 1.0, 2.0
 vels =['2','3']                         # ['1','2'] | ['4','5']
-x    ={'1':4,'2':4,'3':4,'4':4,'5':8}   # duplicates--> 03.00, 03.01 ... any #!
+x    ={'1':4,'2':5,'3':4,'4':4,'5':8}   # duplicates--> 03.00, 03.01 ... any #!
 environ=['01.vac','02.imp','03.exp']    # ['01.vac'] | ['01.vac','03.exp']
-zcrd ='zc16'                            # z constraint  (smd.tcl)
+zcrd ='zc20'                            # z constraint  (smd.tcl)
 envdist={'01.vac':zcrd,'02.imp':zcrd,'03.exp':zcrd} # i.e. '01.vac':zc7...
 langevD='5'                             # langevin Damping: 0.2, 1, 5
 
 #___GATE_______configurations_______
-gate ='ggatecpu'                           # 'ggate' or 'steele' or 'ggatecpu'
+gate ='ggatecpu'                        # 'ggate' or 'steele' or 'ggatecpu'
 cn   ='3'                               # ppn request
 comp ='cpu'                             # gpu or cpu        !TESLA: always 1
 wallt='mwt'                             # swt=72 hrs, mwt=368 hrs, lwt=720 hrs
@@ -54,13 +54,13 @@ strdir ={'01.vac':'08.struc-equil.v','02.imp':'08.struc-equil.i',
          '03.exp':'08.struc-equil.e'}
 tstep  ={'0.5':0.5,'1.0':1.0,'2.0':2.0}
 dictpf ={'1':1,'2':1,'3':50,'4':100,'5':500}
-setup  ={'1':{'vel':0.002,'steps':10000,'dcd':100,'howmany':99,'tclfreq':50},
-      '2':{'vel':0.0002,'steps':100000,'dcd':1000,'howmany':48,'tclfreq':50},
-      '3':{'vel':0.00002,'steps':1000000,'dcd':10000,'howmany':30,
+setup  ={'1':{'vel':0.002,'steps':50000,'dcd':100,'howmany':99,'tclfreq':50},
+      '2':{'vel':0.0002,'steps':500000,'dcd':1000,'howmany':48,'tclfreq':50},
+      '3':{'vel':0.00002,'steps':5000000,'dcd':10000,'howmany':30,
                                                                'tclfreq':50},
-      '4':{'vel':0.000002,'steps':10000000,'dcd':100000,'howmany':3,
+      '4':{'vel':0.000002,'steps':50000000,'dcd':100000,'howmany':3,
                                                                'tclfreq':50},
-      '5':{'vel':0.0000002,'steps':100000000,'dcd':1000000,'howmany':1,
+      '5':{'vel':0.0000002,'steps':500000000,'dcd':1000000,'howmany':1,
                                                                'tclfreq':50}}
 #______________________________________________________________________________
 if len(sys.argv)>=2:                                 # load pickle if available
