@@ -1,22 +1,22 @@
 #!/usr/bin/env python
 import sys, os, itertools, tempfile, shutil, glob, subprocess, re, pickle
 
-#___PROJECT__PREFIX__NAME:   *crdir*.dac130
-crdir='100.'
+#_____PREFIX_FOR_WORKING_DIRECTORY:   *crdir*.dac130
+crdir='source.'
 
-#___MOLECULE___configurations_______
+#_____MOLECULE___configurations________________________________________________
 mlist=['da','ee','el','le','oo']        # potentials--> to be generated
 molec=[mlist[0]]                        # can use [0],[1] ... [n]
 ts   ='2.0'                             # 0.5, 1.0, 2.0
-vels =['3','4']                         # ['1','2'] | ['4','5']
-x    ={'1':4,'2':5,'3':4,'4':4,'5':8}   # duplicates--> 03.00, 03.01 ... any #!
+vels =['3','4','5']                     # ['1','2'] | ['4','5']
+x    ={'1':5,'2':5,'3':30,'4':30,'5':5} # duplicates--> 03.00, 03.01 ... any #!
 environ=['01.vac','02.imp','03.exp']    # ['01.vac'] | ['01.vac','03.exp']
 zcrd ='zc16'                            # z constraint  (smd.tcl)
 envdist={'01.vac':zcrd,'02.imp':zcrd,'03.exp':zcrd} # i.e. '01.vac':zc7...
 langevD='5'                             # langevin Damping: 0.2, 1, 5
 
-#___GATE_______configurations_______
-gate ='ggate'                           # 'ggate' or 'steele' or 'ggatecpu'
+#_____GATE_______configurations________________________________________________
+gate ='ggategpu'                        # ggategpu,ggatecpu,steele
 cn   ='3'                               # ppn request
 comp ='gpu'                             # gpu or cpu        !TESLA: always 1
 wallt='mwt'                             # swt=72 hrs, mwt=368 hrs, lwt=720 hrs
@@ -32,9 +32,9 @@ zlabel ={'zc1':'c100','zc2':'c102','zc3':'c104','zc4':'c106','zc5':'c108',
          'zc11':'c120','zc12':'c122','zc13':'c124','zc14':'c126','zc15':'c128',
          'zc16':'c130','zc17':'c132','zc18':'c134','zc19':'c136','zc20':'c172'}
 configf=['job.sh','go.py','smd.namd','smd.tcl','expavg.py']
-selgate={'ggate':{'job':'job-gg.sh','go':'go-g.py'},
-         'ggatecpu':{'job':'job-ggc.sh','go':'go-ggc.py'},
-         'steele':{'job':'job-st.sh','go':'go-st.py'}}
+selgate={'ggategpu':{'job':'job-ggategpu.sh','go':'go-ggategpu.py'},
+         'ggatecpu':{'job':'job-ggatecpu.sh','go':'go-ggatecpu.py'},
+         'steele':{'job':'job-steele.sh','go':'go-steele.py'}}
 confign={'1':{'gpu':'nodes=1:ppn=1:gpus=1:TESLA','cpu':'nodes=1:ppn=1'},
          '2':{'gpu':'nodes=1:ppn=2:gpus=1:TESLA','cpu':'nodes=1:ppn=2'},
          '3':{'gpu':'nodes=1:ppn=3:gpus=1:TESLA','cpu':'nodes=1:ppn=3'},
