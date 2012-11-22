@@ -2,7 +2,7 @@
 import sys, os, itertools, tempfile, shutil, glob, subprocess, re, pickle
 
 #_____PREFIX_FOR_WORKING_DIRECTORY:   *crdir*.dac130
-crdir='source.'
+crdir='105e.'
 
 #_____MOLECULE___configurations________________________________________________
 mlist=['da','ee','el','le','oo']        # potentials--> to be generated

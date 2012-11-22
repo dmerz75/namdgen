@@ -1,8 +1,8 @@
 #!/bin/bash
 # rsync ggate
 
-SOURCEDIR=/home/dale/Documents/valiant/workgen/namdgen/
-DESTDIR=dmerz3@ggate.chemistry.gatech.edu:/nethome/dmerz3/Documents/valiant/ggate/04.el/chi.el.c172/
+SOURCEDIR=/home/dale/Documents/valiant/workgen/namdgen/source.da.c130/
+DESTDIR=dmerz3@ggate.chemistry.gatech.edu:/nethome/dmerz3/Documents/valiant/ggate/01.da/
 
 #rsync -avh $SOURCEDIR $DESTDIR
-scp -r $DESTDIR $SOURCEDIR
+scp -r $SOURCEDIR $DESTDIR
