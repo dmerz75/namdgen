@@ -10,4 +10,10 @@ howmany= xxhowmanyxx
 for i in range(1,howmany+1):
     os.system('namd2 +pxxnodecountxx smd.namd > run.log')
     os.system('mv da_smd_tcl.out %d-tef.dat.%s' % (i,JOBID1))
-    os.system('mv run.log %d-run.log.%s' % (i,JOBID1))
+
+os.system('rm *.BAK')
+os.system('rm *.coor')
+os.system('rm *.dcd')
+os.system('rm *.vel')
+os.system('rm *.xsc')
+os.system('rm run.log')
