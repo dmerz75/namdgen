@@ -7,7 +7,7 @@
 #PBS -V
 
 # job properties
-NAMD_DIR=/opt/NAMD29_MCUDA/
+NAMD_DIR=/opt/NAMD29M/
 export PATH=${NAMD_DIR}:${PATH}
 export LD_LIBRARY_PATH=${NAMD_DIR}:${LD_LIBRARY_PATH}
 
