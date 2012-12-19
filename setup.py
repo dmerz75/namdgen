@@ -1,39 +1,41 @@
 #!/usr/bin/env python
-import sys, os, itertools, tempfile, shutil, glob, subprocess, re, pickle
+import sys,os,itertools,shutil,glob,re,pickle
 
 #_____PREFIX_FOR_WORKING_DIRECTORY:   *crdir*.dac130
-crdir='chi3.'
+crdir='ee.'
 
 #_____MOLECULE___configurations________________________________________________
-mlist=['da','ee','le','el','oo']        # potentials--> to be generated
-molec=[mlist[3]]                        # can use [0],[1] ... [n]
+mlist=['da','rda','ee','le','el','oo']  #
+molec=[mlist[2]]                        # can use [0],[1] ... [n]
 ts   ='2.0'                             # 0.5, 1.0, 2.0
-vels =['2','3','4']                         # ['1','2'] | ['4','5']
-x    ={'1':9,'2':9,'3':9,'4':9,'5':4} # duplicates--> 03.00, 03.01 ... any #!
+vels =['2','3']                         # ['1','2'] | ['4','5']
+x    ={'1':2,'2':7,'3':7,'4':1,'5':1}   # duplicates--> 03.00, 03.01 ... any #!
 environ=['01.vac','02.imp','03.exp']    # ['01.vac'] | ['01.vac','03.exp']
-zcrd ='zc20'                            # z constraint  (smd.tcl)
+zcrd ='zc6'                             # z constraint  (smd.tcl)
 envdist={'01.vac':zcrd,'02.imp':zcrd,'03.exp':zcrd} # i.e. '01.vac':zc7...
 langevD='5'                             # langevin Damping: 0.2, 1, 5
+sf   = 1                                # scale factor: -1, 1, or 5 if el
 
 #_____GATE_______configurations________________________________________________
-gate ='ggatecpu'                        # ggategpu,ggatecpu,steele
-cn   ='4'                               # ppn request
+gate ='steele'                          # ggategpu,ggatecpu,fgatecpu,steele
+cn   ='6'                               # ppn request
 comp ='cpu'                             # gpu or cpu        !TESLA: always 1
-wallt='mwt'                             # swt=72 hrs, mwt=368 hrs, lwt=720 hrs
+wallt='swt'                             # swt=72 hrs, mwt=368 hrs, lwt=720 hrs
 queue='workq'                           # tg_ 'short'72 'workq'720 'standby-8'
 
 #_______<<<<<<   NO MORE CHANGES REQUIRED   >>>>>>_____________________________
-zdictn ={'zc1': 10.0,'zc2': 10.2,'zc3': 10.4,'zc4': 10.6,'zc5': 10.8,
-         'zc6': 11.0,'zc7': 11.2,'zc8': 11.4,'zc9': 11.6,'zc10':11.8,
-         'zc11':12.0,'zc12':12.2,'zc13':12.4,'zc14':12.6,'zc15':12.8,
-         'zc16':13.0,'zc17':13.2,'zc18':13.4,'zc19':13.6,'zc20':17.2}
-zlabel ={'zc1':'c100','zc2':'c102','zc3':'c104','zc4':'c106','zc5':'c108',
-         'zc6':'c110','zc7':'c112','zc8':'c114','zc9':'c116','zc10':'c118',
-         'zc11':'c120','zc12':'c122','zc13':'c124','zc14':'c126','zc15':'c128',
-         'zc16':'c130','zc17':'c132','zc18':'c134','zc19':'c136','zc20':'c172'}
+zdictn ={'zc1':13.0,'zc2':33.0,'zc3':33.0,'zc4':10.6,'zc5':10.8,
+         'zc6':4.0,'zc7':5.3,'zc8':5.7,'zc9':6.2,'zc10':5.9,
+         'zc11':5.5,'zc12':5.8,'zc13':6.1,'zc14':6.5,'zc15':6.2,
+         'zc16':13.0,'zc17':13.2,'zc18':13.4,'zc19':13.6,'zc20':6.5}
+zlabel ={'zc1':'c130','zc2':'r330','zc3':'r330','zc4':'c106','zc5':'c108',
+         'zc6':'e40','zc7':'e53','zc8':'e57','zc9':'e62','zc10':'c59',
+         'zc11':'c120','zc12':'c122','zc13':'c124','zc14':'c126','zc15':'c62',
+         'zc16':'c130','zc17':'c132','zc18':'c134','zc19':'c136','zc20':'c65'}
 configf=['job.sh','go.py','smd.namd','smd.tcl','expavg.py']
 selgate={'ggategpu':{'job':'job-ggategpu.sh','go':'go-ggategpu.py'},
          'ggatecpu':{'job':'job-ggatecpu.sh','go':'go-ggatecpu.py'},
+         'fgatecpu':{'job':'job-fgatecpu.sh','go':'go-fgatecpu.py'},
          'steele':{'job':'job-steele.sh','go':'go-steele.py'}}
 confign={'1':{'gpu':'nodes=1:ppn=1:gpus=1:TESLA','cpu':'nodes=1:ppn=1'},
          '2':{'gpu':'nodes=1:ppn=2:gpus=1:TESLA','cpu':'nodes=1:ppn=2'},
@@ -54,13 +56,13 @@ strdir ={'01.vac':'08.struc-equil.v','02.imp':'08.struc-equil.i',
          '03.exp':'08.struc-equil.e'}
 tstep  ={'0.5':0.5,'1.0':1.0,'2.0':2.0}
 dictpf ={'1':1,'2':1,'3':50,'4':100,'5':500}
-setup  ={'1':{'vel':0.002,'steps':50000,'dcd':100,'howmany':99,'tclfreq':50},
-      '2':{'vel':0.0002,'steps':500000,'dcd':1000,'howmany':48,'tclfreq':50},
-      '3':{'vel':0.00002,'steps':5000000,'dcd':10000,'howmany':30,
+setup  ={'1':{'vel':0.002,'steps':1000,'dcd':100,'howmany':96,'tclfreq':50},
+      '2':{'vel':0.0002,'steps':1000,'dcd':1000,'howmany':48,'tclfreq':50},
+      '3':{'vel':0.00002,'steps':1000,'dcd':10000,'howmany':10,
                                                                'tclfreq':50},
-      '4':{'vel':0.000002,'steps':50000000,'dcd':100000,'howmany':3,
+      '4':{'vel':0.000002,'steps':1000,'dcd':100000,'howmany':3,
                                                                'tclfreq':50},
-      '5':{'vel':0.0000002,'steps':500000000,'dcd':1000000,'howmany':1,
+      '5':{'vel':0.0000002,'steps':1000,'dcd':1000000,'howmany':1,
                                                                'tclfreq':50}}
 #______________________________________________________________________________
 if len(sys.argv)>=2:                                 # load pickle if available
@@ -96,7 +98,7 @@ if len(sys.argv)>=2:                                 # load pickle if available
 def re_tcl(script,mol,env,v):                       # regular expression values
     o=open(script,'r+')
     text=o.read()
-    text=re.sub('xxvelocityxx',str(setup[v]['vel']),text)
+    text=re.sub('xxvelocityxx',str(setup[v]['vel']*sf),text)
     text=re.sub('xxzcoordxx',str(zdictn[envdist[env]]),text)
     text=re.sub('xxtsxx',str(tstep[ts]),text)
     text=re.sub('xxtclfreqxx',str(setup[v]['tclfreq']),text)
@@ -143,7 +145,7 @@ def re_expavg(script,mol,env,v):
     plotname=plotn1+plotn2
     text=re.sub('xxplotnamexx',plotname,text)
     sconstraint=str(zdictn[envdist[env]])
-    econstraint=str(zdictn[envdist[env]]+(setup[v]['vel']*setup[v]['steps']))
+    econstraint=str(zdictn[envdist[env]]+(setup[v]['vel']*sf*setup[v]['steps']*(10**int(v))))
     text=re.sub('xxstartconstraintxx',sconstraint,text)
     text=re.sub('xxendconstraintxx',econstraint,text)
     text=re.sub('xxmoleculexx',mol,text)
@@ -166,10 +168,18 @@ def re_go(script,mol,env,v):
 def re_namd(script,mol,env,v):
     o=open(script,'r+')
     text=o.read()
-    text=re.sub('xxstepsxx',str(setup[v]['steps']),text)
+    text=re.sub('xxstepsxx',str(setup[v]['steps']*(10**int(v))),text)
     text=re.sub('xxdcdxx',str(setup[v]['dcd']),text)
     text=re.sub('xxtsxx',str(tstep[ts]),text)
     text=re.sub('xxlDxx',langevD,text)
+    o.close()
+    o=open(script,'w+')
+    o.write(text)
+    o.close()
+def re_hb(script,mol,env,v):
+    o=open(script,'r+')
+    text=o.read()
+    text=re.sub('xxenvironxx',strdir[env],text)
     o.close()
     o=open(script,'w+')
     o.write(text)
@@ -194,6 +204,12 @@ def reg_exp(subdir,mol,env,v):        # regular expression by script name
                 re_expavg(fn,mol,env,v)
             elif id=='npy.py':
                 re_npy(fn,mol,env,v)
+            elif id=='hb_rgyr.py':
+                re_hb(fn,mol,env,v)
+            elif id=='allhb.py':
+                re_npy(fn,mol,env,v)
+            elif id=='ihbond.py':
+                re_npy(fn,mol,env,v)
 #________________________________________________________________________
 def copy_folder(subdir):                     # replicate in accord x dict
     ename=subdir+'/expavg.py'
@@ -208,6 +224,14 @@ def copy_folder(subdir):                     # replicate in accord x dict
     dualname=subdir+'/dualplot.py'
     dloc=('/').join(subdir.split('/')[:-1])
     dlocn=dloc+'/0'+num+'-dualplot.py'
+    os.system('mv %s %s' % (dualname,dlocn))
+    dualname=subdir+'/ihbond.py'
+    dloc=('/').join(subdir.split('/')[:-1])
+    dlocn=dloc+'/0'+num+'-ihbond.py'
+    os.system('mv %s %s' % (dualname,dlocn))
+    dualname=subdir+'/allhb.py'
+    dloc=('/').join(subdir.split('/')[:-1])
+    dlocn=dloc+'/0'+num+'-allhb.py'
     os.system('mv %s %s' % (dualname,dlocn))
     folder=subdir.split('/')[-1]
     copies=x[folder]
@@ -231,6 +255,9 @@ def make_folder(mol,env,zcrd):                        # make 5 velocities
         gofiles=os.path.join(maindir,selgate[gate]['go'])
         gofiled=os.path.join(subdir,'go.py')
         shutil.copy2(gofiles,gofiled)
+        gofiles=os.path.join(maindir,'hb_rgyr-t.py')
+        gofiled=os.path.join(subdir,'hb_rgyr.py')
+        shutil.copy2(gofiles,gofiled)
         expfiles=os.path.join(maindir,'expavg-t.py')
         expfiled=os.path.join(subdir,'expavg.py')
         shutil.copy2(expfiles,expfiled)
@@ -239,6 +266,12 @@ def make_folder(mol,env,zcrd):                        # make 5 velocities
         shutil.copy2(expfiles,expfiled)
         expfiles=os.path.join(maindir,'dualplot-t.py')
         expfiled=os.path.join(subdir,'dualplot.py')
+        shutil.copy2(expfiles,expfiled)
+        expfiles=os.path.join(maindir,'allhb-t.py')
+        expfiled=os.path.join(subdir,'allhb.py')
+        shutil.copy2(expfiles,expfiled)
+        expfiles=os.path.join(maindir,'ihbond-t.py')
+        expfiled=os.path.join(subdir,'ihbond.py')
         shutil.copy2(expfiles,expfiled)
         stfiles=os.path.join(maindir,mol,'smd.tcl')
         stfiled=os.path.join(subdir,'smd.tcl')
