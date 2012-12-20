@@ -2,7 +2,7 @@
 #PBS -N xxjobnamexx
 #PBS -j oe
 #PBS -l xxwalltimexx
-#PBS -l pmem=680mb
+#PBS -l pmem=480mb
 #PBS -l xxnodesxx
 #PBS -V
 

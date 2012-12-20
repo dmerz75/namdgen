@@ -1,7 +1,7 @@
 #!/bin/bash
 #PBS -q xxqueuexx
 #PBS -N xxjobnamexx
-#PBS -l pmem=680mb
+#PBS -l pmem=480mb
 #PBS -l xxwalltimexx
 #PBS -l xxnodesxx
 #PBS -j oe

@@ -2,19 +2,16 @@
 import sys,os,time
 import numpy as np
 
-JOBID = os.environ['PBS_JOBID'].split('.')[0]
-
-howmany= xxhowmanyxx
+howmany= 10
 t_data = np.array([])
 
 def run_namd(i):
     st = time.time()
-    os.system('charmrun ++local +pxxnodecountxx \
-              /apps/rhel5/namd/NAMD_2.9b2_Linux-x86_64-TCP/namd2 \
-              smd.namd > run.log')
+    os.system('namd2 +p1 smd.namd > run.log')
     tt = time.time()-st
-    os.system('mv da_smd_tcl.out %d-tef.dat.%s' % (i,JOBID))
-    os.system('python hb_rgyr.py %d %s' % (i,JOBID))
+    print tt
+    os.system('mv da_smd_tcl.out %d-tef.dat' % i)
+    os.system('python hb_rgyr.py %d' % i)
     return tt
 
 for i in range(1,howmany+1):
@@ -22,7 +19,7 @@ for i in range(1,howmany+1):
     t_data = np.append(t_data,t1)
     if i==1:
         os.system('mv da_smd.dcd %d-da_smd.dcd' % i)
-    if i%4==0 or i%howmany==0:
+    if i%4 == 0 or i%howmany == 0:
         np.save('%d_time' % i,t_data)
         np.savetxt('time.dat',t_data,fmt='%.4f')
 

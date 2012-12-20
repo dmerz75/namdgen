@@ -7,14 +7,11 @@
 #PBS -V
 
 # job properties
-NAMD_DIR=/opt/NAMD29_MCUDA/
+NAMD_DIR=/share/apps/NAME_2.9_Linux-x86-64-multicore/
 export PATH=${NAMD_DIR}:${PATH}
 export LD_LIBRARY_PATH=${NAMD_DIR}:${LD_LIBRARY_PATH}
 
-# Parse out the GPU device number from the $PBS_GPUFILE
-device=`grep -- "-gpu" $PBS_GPUFILE | sed 's/.*-gpu//'`
-
 cd $PBS_O_WORKDIR
 
-# job running
-./go.py $device
+# run job
+./go.py
