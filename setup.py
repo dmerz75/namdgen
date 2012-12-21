@@ -2,14 +2,14 @@
 import sys,os,itertools,shutil,glob,re,pickle
 
 #_____PREFIX_FOR_WORKING_DIRECTORY:   *crdir*.dac130
-crdir='test-st.'
+crdir='time.'
 
 #_____MOLECULE___configurations________________________________________________
 mlist=['da','rda','ee','le','el','oo']  #
 molec=[mlist[0]]                        # can use [0],[1] ... [n]
 ts   ='2.0'                             # 0.5, 1.0, 2.0
-vels =['2']                             # ['1','2'] | ['4','5']
-x    ={'1':1,'2':1,'3':1,'4':1,'5':1}   # duplicates--> 03.00, 03.01 ... any #!
+vels =['1']                             # ['1','2'] | ['4','5']
+x    ={'1':2,'2':1,'3':1,'4':1,'5':1}   # duplicates--> 03.00, 03.01 ... any #!
 environ=['01.vac','02.imp','03.exp']    # ['01.vac'] | ['01.vac','03.exp']
 zcrd ='zc1'                             # z constraint  (smd.tcl)
 envdist={'01.vac':zcrd,'02.imp':zcrd,'03.exp':zcrd} # i.e. '01.vac':zc7...
@@ -17,7 +17,7 @@ langevD='5'                             # langevin Damping: 0.2, 1, 5
 sf   = 1                                # scale factor: -1, 1, or 5 if el
 
 #_____GATE_______configurations________________________________________________
-gate ='steele'                          # ggategpu,ggatecpu,fgatecpu,steele
+gate ='ggatecpu'                        # ggategpu,ggatecpu,fgatecpu,steele
 cn   ='2'                               # ppn request
 comp ='cpu'                             # gpu or cpu        !TESLA: always 1
 wallt='swt'                             # swt=72 hrs, mwt=368 hrs, lwt=720 hrs

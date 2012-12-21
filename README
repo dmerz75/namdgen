@@ -1,6 +1,6 @@
-namdgen
-author: Dale R. Merz Jr.
-email : dmerz3@gatech.edu
+project: namdgen
+author:  Dale R. Merz Jr.
+email :  dmerz3@gatech.edu
 
 NAMD Steered Molecular Dynamics
 
@@ -8,15 +8,13 @@ quick description:
  -steered molecular dynamics with NAMD
  -obtaining the PMF stretching a peptide
 
-more details:
- -take 1 peptide, with a .psf, .pdb (equilibrated), and smd.namd (as template),
-  for any solvent conditions, vacuum, implicit, or explicit, and generate a
-  project directory, for exploring multiple pulling velocities, all from 
-  1 script
- -generates an array of directories designed for quick acquisition of 
-  a virtually unlimited number of trajectories
- 
-steps/commands:
- 1) ./setup.py    # create the working directory
- 2) upload the directory onto a cluster 
- 3) ./run.py      # submits jobs to the PBS resource manager
+Preparations:
+ 1) place 00.pdb and 00.psf for any peptide, previously subjected to
+    equilibration, in its own directory in 08.struc-equil folder
+    >>> for a peptide, pep, /08.struc-equil/pep/00.pdb,00.psf 
+ 2) create solvent templates in 0000-maindir for a new peptide
+    >>> /0000-maindir/pep/maindir-[v,i,e]/smd.namd
+ 3) make necessary modifications to setup.py
+ 4) './setup.py' creates the working directories
+ 5) upload the directory onto a cluster 
+ 6) './run.py' submits all job.sh scripts to the PBS resource manager
