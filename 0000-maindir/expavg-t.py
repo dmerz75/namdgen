@@ -17,8 +17,8 @@ for path in glob(os.path.join(my_dir,'xxnumxx.data/*.npy')):
 data=np.concatenate(acc,axis=0)
 
 # variables, simulation parameters;  10,000 steps
-v    = xxvelapsxx              ;#  20 A in 20 ps, 1.0000 A/ps
-dt   = xxdtxx                ;#  2 fs * 50(smd.tcl) / 1000, 0.1 ps
+v    = xxvelapsxx            ;#  20 A in 20 ps, 1.0000 A/ps
+dt   = xxdtxx              ;#  2 fs * 50(smd.tcl) / 1000, 0.1 ps
 beta = -0.6              ;#  8.31 J/K*mol, 4.184 J/cal -> .6 kcal/mol
 
 # columns of data 3D array
@@ -51,6 +51,7 @@ for index in plot_indices:
    e_i = data[index,::,1]
    w_i = work[index,::]
    plt.plot(domain[::xxpfxx],w_i[::xxpfxx],'k-',linewidth=0.4)
+
 '''
    t = np.linspace(e_i[0],e_i[-1],15)
    t = t[1:-1:]
@@ -65,6 +66,7 @@ t_plot = np.linspace(ec[0],ec[-1],100)
 plt.plot(t_plot,spline(t_plot),'r',linewidth=7)
 plt.plot(t_plot,spline(t_plot),'k--',linewidth=1.5)
 '''
+
 plt.plot(domain[::xxpfxx], deltaf[::xxpfxx],'r-',linewidth=5)
 plt.plot(domain[::xxpfxx], deltaf[::xxpfxx],'k--',linewidth=0.6)
 
@@ -93,6 +95,11 @@ plt.title('NAMD - SMD - xxmoleculexx\n'+str(data.shape[0])+'trj xxenvironxx xxve
 plt.xlim([xmin-.1,xmax+.1])
 
 plt.draw()
-#plt.show()
-fig.savefig('xxplotnamexxea.png')
-fig.savefig('xxplotnamexxea.eps')
+texdir = os.path.join(('/'.join(my_dir.split('/')[0:-1])), \
+                       'tex_%s/fig_pmf' % my_dir.split('/')[-2])
+if not os.path.exists(texdir):
+    os.makedirs(texdir)
+#plt.savefig('xxplotnamexxea.png')
+#plt.savefig('xxplotnamexxea.eps')
+plt.savefig('%s/xxplotnamexxea.png' % texdir)
+plt.savefig('%s/xxplotnamexxea.eps' % texdir)

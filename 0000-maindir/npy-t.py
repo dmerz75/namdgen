@@ -29,7 +29,10 @@ def pack(i):
         acc.append(sample_i)
     os.chdir(ddir)
     data = np.array(acc)
-    np.save('%s_%d_%s' % (num,i,now),data)
+    if not len(data)==0:
+        np.save('%s_%d_%s' % (num,i,now),data)
+    else:
+        print "zero trajectories remain"
 
 count=0
 for path in glob(os.path.join(my_dir,'%s.*/*-tef.dat*' % num)):

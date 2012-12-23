@@ -7,7 +7,7 @@ import numpy as np
 import pickle
 import os,sys
 
-script,stri,jbid = argv
+#script,stri,jbid = argv
 
 #______________universe______________________________________________________
 u = MDAnalysis.Universe('../../xxenvironxx/00.psf','da_smd.dcd',
@@ -17,10 +17,12 @@ h = MDAnalysis.analysis.hbonds.HydrogenBondAnalysis(u,'protein','protein',
 results = h.run()
 
 #______________h.timeseries__________________________________________________
-pickle.dump(h.timeseries,open('%s-hb.pkl.%s' % (stri,jbid),'w'))
+pickle.dump(h.timeseries,open('%s-hb.pkl.%s' % (sys.argv[1],sys.argv[2]),'w'))
 
 '''
 f = open('%s-hlist.dat.%s' % (stri,jbid),'w')
+f = open('%s-hlist.dat.%s' % (sys.argv[1],sys.argv[2],'w')
+
 for n in range(0,len(h.timeseries)):
     for bond in h.timeseries[n]:
         for val in bond:

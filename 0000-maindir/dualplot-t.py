@@ -97,5 +97,11 @@ plt.ylabel('Work (kcal/mol)')
 plt.title(str(data.shape[1])+'trj xxenvironxx xxvelansxx A/ns')
 plt.draw()
 #plt.show()
-fig.savefig('xxplotnamexxd2.png')
-fig.savefig('xxplotnamexxd2.eps')
+texdir = os.path.join(('/'.join(my_dir.split('/')[0:-1])), \
+                       'tex_%s/fig_pmf' % my_dir.split('/')[-2])
+if not os.path.exists(texdir):
+    os.makedirs(texdir)
+#plt.savefig('xxplotnamexxd2.png')
+#plt.savefig('xxplotnamexxd2.eps')
+plt.savefig('%s/xxplotnamexxd2.png' % texdir)
+plt.savefig('%s/xxplotnamexxd2.eps' % texdir)

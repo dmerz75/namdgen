@@ -49,8 +49,15 @@ plt.xlabel('end-to-end distance (A)')
 plt.ylabel('average H-bond count')
 plt.title('xxmoleculexx structure: NAMD/Charmm22 %strj' % trj)
 plt.legend()
+plt.gca().set_ylim(ymin=-0.2)
 #plt.axis([9.9,35.1,-.1,6.4])
 
 plt.draw()
-plt.savefig('xxnumxx_xxenvironxx_ihb.eps')
-plt.savefig('xxnumxx_xxenvironxx_ihb.png')
+texdir = os.path.join(('/'.join(my_dir.split('/')[0:-1])), \
+                       'tex_%s/fig_bond' % my_dir.split('/')[-2])
+if not os.path.exists(texdir):
+    os.makedirs(texdir)
+#plt.savefig('xxplotnamexx_ihb.eps')
+#plt.savefig('xxplotnamexx_ihb.png')
+plt.savefig('%s/xxplotnamexx_ihb.eps' % texdir)
+plt.savefig('%s/xxplotnamexx_ihb.png' % texdir)
