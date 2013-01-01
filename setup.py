@@ -2,23 +2,23 @@
 import sys,os,itertools,shutil,glob,re,pickle
 
 #_____PREFIX_FOR_WORKING_DIRECTORY:   *crdir*.dac130
-crdir='time.'
+crdir='hbwp.'
 
 #_____MOLECULE___configurations________________________________________________
 mlist=['da','rda','ee','le','el','oo']  #
-molec=[mlist[0]]                        # can use [0],[1] ... [n]
+molec=[mlist[1]]                        # can use [0],[1] ... [n]
 ts   ='2.0'                             # 0.5, 1.0, 2.0
-vels =['1']                             # ['1','2'] | ['4','5']
-x    ={'1':2,'2':1,'3':1,'4':1,'5':1}   # duplicates--> 03.00, 03.01 ... any #!
+vels =['2','3']                         # ['1','2'] | ['4','5']
+x    ={'1':2,'2':4,'3':21,'4':1,'5':1}  # duplicates--> 03.00, 03.01 ... any #!
 environ=['01.vac','02.imp','03.exp']    # ['01.vac'] | ['01.vac','03.exp']
-zcrd ='zc1'                             # z constraint  (smd.tcl)
+zcrd ='zc2'                             # z constraint  (smd.tcl)
 envdist={'01.vac':zcrd,'02.imp':zcrd,'03.exp':zcrd} # i.e. '01.vac':zc7...
 langevD='5'                             # langevin Damping: 0.2, 1, 5
-sf   = 1                                # scale factor: -1, 1, or 5 if el
+sf   = -1                               # scale factor: -1, 1, or 5 if el
 
 #_____GATE_______configurations________________________________________________
-gate ='ggatecpu'                        # ggategpu,ggatecpu,fgatecpu,steele
-cn   ='2'                               # ppn request
+gate ='steele'                          # ggategpu,ggatecpu,fgatecpu,steele
+cn   ='5'                               # ppn request
 comp ='cpu'                             # gpu or cpu        !TESLA: always 1
 wallt='swt'                             # swt=72 hrs, mwt=368 hrs, lwt=720 hrs
 queue='workq'                           # tg_ 'short'72 'workq'720 'standby-8'
@@ -46,7 +46,7 @@ confign={'1':{'gpu':'nodes=1:ppn=1:gpus=1:TESLA','cpu':'nodes=1:ppn=1'},
          '7':{'gpu':'nodes=1:ppn=7:gpus=1:TESLA','cpu':'nodes=1:ppn=7'},
          '8':{'gpu':'nodes=1:ppn=8:gpus=1:TESLA','cpu':'nodes=1:ppn=8'},
        '16':{'gpu':'nodes=1:ppn=16:gpus=1:TESLA','cpu':'nodes=1:ppn=16'}}
-configw={'swt':'walltime=72:00:00','mwt':'walltime=368:00:00',
+configw={'swt':'walltime=52:00:00','mwt':'walltime=368:00:00',
          'lwt':'walltime=720:00:00'}
 configq={'short':'tg_short','workq':'tg_workq',
          'standby-8':'tg_standby-8'}
@@ -56,7 +56,7 @@ strdir ={'01.vac':'08.struc-equil.v','02.imp':'08.struc-equil.i',
          '03.exp':'08.struc-equil.e'}
 tstep  ={'0.5':0.5,'1.0':1.0,'2.0':2.0}
 dictpf ={'1':1,'2':1,'3':50,'4':100,'5':500}
-setup  ={'1':{'vel':0.002,'steps':1000,'dcd':100,'howmany':96,'tclfreq':50},
+setup  ={'1':{'vel':0.002,'steps':1000,'dcd':100,'howmany':3,'tclfreq':50},
       '2':{'vel':0.0002,'steps':1000,'dcd':1000,'howmany':48,'tclfreq':50},
       '3':{'vel':0.00002,'steps':1000,'dcd':10000,'howmany':10,
                                                                'tclfreq':50},
@@ -202,16 +202,20 @@ def reg_exp(subdir,mol,env,v):        # regular expression by script name
                 re_tcl(fn,mol,env,v)
             elif id=='expavg.py':
                 re_expavg(fn,mol,env,v)
+            elif id=='tm.tex':
+                re_expavg(fn,mol,env,v)
             elif id=='dualplot.py':
                 re_expavg(fn,mol,env,v)
             elif id=='npy.py':
-                re_npy(fn,mol,env,v)
+                re_expavg(fn,mol,env,v)
             elif id=='hb_rgyr.py':
                 re_hb(fn,mol,env,v)
             elif id=='allhb.py':
-                re_npy(fn,mol,env,v)
+                re_expavg(fn,mol,env,v)
+            elif id=='allwp.py':
+                re_expavg(fn,mol,env,v)
             elif id=='ihbond.py':
-                re_npy(fn,mol,env,v)
+                re_expavg(fn,mol,env,v)
 #________________________________________________________________________
 def copy_folder(subdir):                     # replicate in accord x dict
     ename=subdir+'/expavg.py'
@@ -234,6 +238,10 @@ def copy_folder(subdir):                     # replicate in accord x dict
     dualname=subdir+'/allhb.py'
     dloc=('/').join(subdir.split('/')[:-1])
     dlocn=dloc+'/0'+num+'-allhb.py'
+    os.system('mv %s %s' % (dualname,dlocn))
+    dualname=subdir+'/allwp.py'
+    dloc=('/').join(subdir.split('/')[:-1])
+    dlocn=dloc+'/0'+num+'-allwp.py'
     os.system('mv %s %s' % (dualname,dlocn))
     folder=subdir.split('/')[-1]
     copies=x[folder]
@@ -272,9 +280,16 @@ def make_folder(mol,env,zcrd):                        # make 5 velocities
         expfiles=os.path.join(maindir,'allhb-t.py')
         expfiled=os.path.join(subdir,'allhb.py')
         shutil.copy2(expfiles,expfiled)
+        expfiles=os.path.join(maindir,'allwp-t.py')
+        expfiled=os.path.join(subdir,'allwp.py')
+        shutil.copy2(expfiles,expfiled)
         expfiles=os.path.join(maindir,'ihbond-t.py')
         expfiled=os.path.join(subdir,'ihbond.py')
         shutil.copy2(expfiles,expfiled)
+        expfiles=os.path.join(maindir,'tm.tex')
+        expfiled=os.path.join(texdir,'tm.tex')
+        shutil.copy2(expfiles,expfiled)
+        reg_exp(texdir,mol,env,v)
         stfiles=os.path.join(maindir,mol,'smd.tcl')
         stfiled=os.path.join(subdir,'smd.tcl')
         shutil.copy2(stfiles,stfiled)
@@ -288,6 +303,9 @@ maindir=os.path.join(workdir,'0000-maindir')
 for mol in molec:
     jobdirname=crdir+mol+'.'+str(zlabel[zcrd])
     jobdir=os.path.join(workdir,jobdirname)
+    texdir=os.path.join(jobdir,'tex_%s' % jobdirname)
+    if not os.path.exists(texdir):
+        os.makedirs(texdir)
     for env in environ:
         make_folder(mol,env,zcrd)
         strdir1=os.path.join(workdir,'08.struc-equil',mol,strdir[env])
