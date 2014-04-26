@@ -6,7 +6,7 @@ crdir='hbwp.'
 
 #_____MOLECULE___configurations________________________________________________
 mlist=['da','rda','ee','le','el','oo']  #
-molec=[mlist[1]]                        # can use [0],[1] ... [n]
+molec=[mlist[0]]                        # can use [0],[1] ... [n]
 ts   ='2.0'                             # 0.5, 1.0, 2.0
 vels =['2','3']                         # ['1','2'] | ['4','5']
 x    ={'1':2,'2':4,'3':21,'4':1,'5':1}  # duplicates--> 03.00, 03.01 ... any #!
@@ -14,7 +14,7 @@ environ=['01.vac','02.imp','03.exp']    # ['01.vac'] | ['01.vac','03.exp']
 zcrd ='zc2'                             # z constraint  (smd.tcl)
 envdist={'01.vac':zcrd,'02.imp':zcrd,'03.exp':zcrd} # i.e. '01.vac':zc7...
 langevD='5'                             # langevin Damping: 0.2, 1, 5
-sf   = -1                               # scale factor: -1, 1, or 5 if el
+sf   = 1                                # scale factor: -1, 1, or 5 if el
 
 #_____GATE_______configurations________________________________________________
 gate ='steele'                          # ggategpu,ggatecpu,fgatecpu,steele
